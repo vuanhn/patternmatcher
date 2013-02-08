@@ -48,7 +48,7 @@ public abstract class MyImage {
 	}
 	
 	//Returns hash value from row y from index x to x+wide
-	public int rowSectionHash(int y, int x, int wide) {
+	public int rowSegmentHash(int y, int x, int wide) {
 		//Checks if y is in height and the x index won't go off the side
 		//of an image
 		if(y >= this.getHeight() || x + wide >= this.getWidth()) {
@@ -66,14 +66,15 @@ public abstract class MyImage {
 	
 	//Returns an array where rows y to y+high are represented as array elements
 	//The hash for each row is represented for their x to x+wide pixels
-	public int[] rowSectionHashes(int y, int x, int wide, int high) {
+	public int[] rowSegmentHashes(int y, int x, int wide, int high) {
 		//Initialize array to hold hashes
 		int[] hashes = new int[high];
 		
 		//Adds sRGB from index x to x+wide for each row y to y+high
 		for(int j = high; j < y + high; j++) {
-			hashes[j] = this.rowSectionHash(j, x, wide);
+			hashes[j] = this.rowSegmentHash(j, x, wide);
 		}
+		
 		return hashes;
 	}
 	
@@ -89,31 +90,14 @@ class PatternImage extends MyImage {
 	
 	//Calculates hash value of row y
 	public int rowHash(int y) {
-		//Check if row is in image
-		if(y >= height) {
-			throw new ArrayIndexOutOfBoundsException("Out of bound");
-		}
-		
-		// Adds all sRGB values into hash
-		int hash = 0;
-		for(int i = 0; i < this.getWidth(); i++) {
-			hash += this.getPixel(i, y);
-		}
-		
-		return hash;
+		//Get hash of row segment from 0 to width
+		return this.rowSegmentHash(y, 0, this.getWidth());
 	}
 	
 	//Returns an array of hash values for each row
 	public int[] rowHashes() {
-		//Make array to hold hash values of all rows
-		int[] hashes = new int[height];
-		
-		//Get row hash for every row 
-		for(int j = 0; j < this.getHeight(); j++) {
-			hashes[j] = this.rowHash(j);
-		}
-		
-		return hashes;
+		//Get hashes of all row segments from 0 to width
+		return this.rowSegmentHashes(0, 0, this.getWidth(), this.getHeight());
 	}
 	
 }
@@ -126,34 +110,6 @@ class SourceImage extends MyImage {
 		super(image);
 	}
 	
-	//Get hash value for the row number at an index for a given length
-	public int rowSectionHash(int row, int index, int length) {
-		//Check if row is in image
-		if(row >= height) {
-			throw new ArrayIndexOutOfBoundsException("Out of bound");
-		}
-		
-		//Adds sRGB values in row sections into hash
-		int hash = 0;
-		for(int i = index; i < index + length; i++) {
-			hash += this.getPixel(i, row);
-		}
-		
-		return hash;
-	}
-	
-	//Returns an array of hash values for each row section
-	public int[] rowSectionHashes(int row, int index, int length, int p_height) {
-		//Initialize array to hold hashes
-		int[] hashes = new int[p_height];
-		
-		//Loop finds row section of at a specified start row and index
-		for(int j = row; j < p_height + row; j++) {
-			hashes[j] = this.rowSectionHash(j, index, length);
-		}
-		return hashes;
-	}
-	
 }
 
 //Checks if a pattern image is in a source image
@@ -162,7 +118,7 @@ class searchImages {
 	SourceImage source; //SourceImage
 	int current_x; //x location in source
 	int current_y; //y location in source
-	int y_threshold; //
+	int y_threshold; 
 	int x_threshold;
 	
 	//Create a searchImages
@@ -175,41 +131,58 @@ class searchImages {
 		this.x_threshold = source.getWidth() - pattern.getWidth();
 	}
 	
-	//Checks if the hashes in pattern image match those in the source hashes
-	//at the given row and index
-	boolean matchRowHash(int patternRow, int sourceRow, int sourceIndex) {
-		int patternRowHash = pattern.rowHash(patternRow);
-		int sourceRowHash = source.rowSectionHash(sourceRow, sourceIndex, pattern.getWidth());
+	//Checks if the hash of the pattern image at row pattern_y is equal to
+	//the hash of the source image at row source_y, starting at index 
+	//source_x to source_x+pattern.getWidth()
+	boolean matchRowHash(int pattern_y, int source_y, int source_x) {
+		int patternRowHash = pattern.rowHash(pattern_y);
+		int sourceRowHash = source.rowSegmentHash(source_y, source_x, pattern.getWidth());
 		return patternRowHash == sourceRowHash;
 	}
 	
 	//Checks if the sRGB values of a pattern and source images are the same,
 	//not just the hash values
-	boolean deepRowComparison(int patternRow, int sourceRow, int sourceIndex) {
-		int p_row = patternRow; //Row in pattern image
-		int p_index = 0; //Index on row
-		int s_row = sourceRow; //Row in pattern image
-		int s_index = sourceIndex; //Index on row
-		int s_width = pattern.getWidth();
-		int p_pixel;
-		int s_pixel;
+	boolean deepRowComparison(int pattern_y, int source_y, int source_x) {
+		int p_index = 0; //Index for row pattern_y
+		int s_index = source_x; //Index for row source_y
+		int p_wide = pattern.getWidth(); //Width of source image segment
+		int p_pixel; //Holds pattern pixel sRGB values
+		int s_pixel; //Holds source pixel sRGB values
 		
-		while(p_index < s_width) {
-			p_pixel = pattern.getPixel(p_index, p_row);
-			s_pixel = source.getPixel(s_index, s_row);
+		//Loop until the end of the pattern image
+		while(p_index < p_wide) {
+			//Get pattern and source pixel
+			p_pixel = pattern.getPixel(p_index, pattern_y);
+			s_pixel = source.getPixel(s_index, source_y);
+			
+			//Check if they are not the same
 			if(p_pixel != s_pixel) {
 				return false;
 			} 
+			
+			//Increment both to next pixel
+			p_index++;
+			s_index++;
 		}
+		//Return true is your reach the end
 		return true;
 	}
 	
+	//Look for possible matches quickly with just hash values
 	void possibleMatch() {
+		//Loop while the pattern image can still fit in the source image
 		while(current_y < y_threshold) {
 			while(current_x < x_threshold) {
+				//Check if the row hashes match
 				if(this.matchRowHash(0, current_y, current_x)) {
+					//Does a real comparison of rows, element by element
 					if(this.deepRowComparison(0, current_y, current_x)) {
+						//Hands it off to another function to 
+						//check if it is really a match
 						this.checkMatch(current_x, current_y);
+						
+						//End method to check match
+						return;
 					}
 				}
 				current_x++;
@@ -218,23 +191,37 @@ class searchImages {
 		}
 	}
 	
+	//Checks if a segment of the source image matches the entire pattern image
 	void checkMatch(int match_x, int match_y) {
-		int source_x = match_x;
-		int source_y = match_y + 1;
-		int pattern_y = 1;
-		while(source_y < source_y + pattern.getHeight()) {
-			if(!this.matchRowHash(pattern_y, source_y, source_x)) {
-				break;
-			}
+		int source_x = match_x; //x index to compare at each row
+		int source_y = match_y + 1; //y row of the source image
+		int pattern_y = 1; //y row of the pattern image
+		int high = pattern.getHeight(); //Number of rows to compare
+		int wide = pattern.getWidth(); //Wide of pattern image
+		
+		//Loop until at the last row of pattern image
+		while(pattern_y < high) {
+			//Exit loop if they are not equal
 			if(!this.deepRowComparison(pattern_y, source_y, source_x)) {
 				break;
 			}
-			if(pattern_y == pattern.getHeight()) {
+			
+			//If at the last row for pattern image, report a match
+			if(pattern_y == high - 1) {
 				System.out.println("MATCH TEXT");
+				
+				//Mutate where the search beyond this pattern
+				current_x += wide;
+				current_y += high;
 			}
+			
+			//Increment rows
+			source_y++;
+			pattern_y++;
 		}
-		current_x += pattern.getWidth();
-		current_y += pattern.getHeight();
+		
+		//Look for more possible matches
 		this.possibleMatch();
+		return;
 	}
 }
