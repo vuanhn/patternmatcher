@@ -57,7 +57,7 @@ public abstract class MyImage {
 		
 		//Adds sRGB values in row y from index x to x+wide
 		int hash = 0;
-		for(int i = x; i < x + wide; i++) {
+		for(int i = x; i < x+wide; i++) {
 			hash += this.getPixel(i, y);
 		}
 		
@@ -71,7 +71,7 @@ public abstract class MyImage {
 		int[] hashes = new int[high];
 		
 		//Adds sRGB from index x to x+wide for each row y to y+high
-		for(int j = high; j < y + high; j++) {
+		for(int j = high; j < y+high; j++) {
 			hashes[j] = this.rowSegmentHash(j, x, wide);
 		}
 		
