@@ -1,4 +1,6 @@
 import java.awt.image.*;
+import javax.imageio.ImageIO;
+import java.io.File;
 
 //Abstract class for pattern and source images
 public abstract class MyImage {
@@ -113,7 +115,7 @@ class SourceImage extends MyImage {
 }
 
 //Checks if a pattern image is in a source image
-class searchImages {
+class SearchImages {
 	PatternImage pattern; //PatternImage
 	SourceImage source; //SourceImage
 	int current_x; //x location in source
@@ -223,5 +225,40 @@ class searchImages {
 		//Look for more possible matches
 		this.possibleMatch();
 		return;
+	}
+}
+
+public class MainProgram {
+	public static void main(String[] args) {
+		if (args.length != 4){
+			System.exit();
+		} 
+		
+		int argOffset = 0;
+		String patternFilename;
+		String sourceFilename;
+		
+		while (argsOffset < args.length){
+			if (args[argOffset] = "-p") {
+				patternFilename = args[argOffset + 1];
+			} else if (args[argOffset] = "-s") {
+				sourceFilename = args[argOffset + 1];
+			}
+			argOffset++;
+		}
+		
+		BufferedImage patternImage = null;
+		patternImage = ImageIO.read(new File(patternFilename));
+		
+		BufferedImage sourceImage = null;
+		sourceImage = ImageIO.read(new File(sourceImage));
+		
+		PatternImage pattern = new PatternImage(patternImage);
+		SourceImage source = new SourceImage(sourceImage);
+		
+		SearchImages newSearch = new SearchImages(pattern, source);
+		
+		newSearch.possibleMatch();		
+		
 	}
 }
