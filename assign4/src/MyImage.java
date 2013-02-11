@@ -262,3 +262,41 @@ public class MainProgram {
 		
 	}
 }
+
+public void testImages() throws Exception {
+	BufferedImage black = new File("/course/cs4500wc/Assignments/A4/Patterns/black.jpg");
+	BufferedImage bb0001 = new File("/course/cs4500wc/Assignments/A4/Sources/bb0001.jpg");
+	BufferedImage hh0021 =  new File("/course/cs4500wc/Assignments/A4/Sources/hh0021.jpg");
+	BufferedImage cliff = new File("/course/cs4500wc/Assignments/A4/Patterns/cliff.png");
+	BufferedImage an0300 = new File("/course/cs4500wc/Assignments/A4/Sources/an0300.jpg");
+	BufferedImage flower = new File("/course/cs4500wc/Assignments/A4/Patterns/flower.gif");
+	BufferedImage ac1000 = new File("/course/cs4500wc/Assignments/A4/Sources/ac1000.jpg");
+	BufferedImage nature = new File("/course/cs4500wc/Assignments/A4/Patterns/nature.jpg");
+	BufferedImage rock = new File("/course/cs4500wc/Assignments/A4/Patterns/rock.jpg");
+	BufferedImage ar0800 = new File("/course/cs4500wc/Assignments/A4/Sources/ar0800.jpg");
+	BufferedImage tree = new File("/course/cs4500wc/Assignments/A4/Patterns/tree.jpg");
+	BufferedImage aa0010 = new File("/course/cs4500wc/Assignments/A4/Sources/aa0010.jpg");
+	BufferedImage ranch = new File("/course/cs4500wc/Assignments/A4/Patterns/ranch.jpg");
+	BufferedImage ai0059 = new File("/course/cs4500wc/Assignments/A4/Sources/ai0059.gif");
+	BufferedImage morning = new File("/course/cs4500wc/Assignments/A4/Patterns/morning.png");
+	BufferedImage ak432 = new File("/course/cs4500wc/Assignments/A4/Sources/ak432.png");
+	
+	SearchImages[] searchArray;
+	
+	searchArray = new SearchImages[9];
+	
+	searchArray[0] = new SearchImages(black, bb0001);
+	searchArray[1] = new SearchImages(black, hh0021);
+	searchArray[2] = new SearchImages(cliff, an0300);
+	searchArray[3] = new SearchImages(flower, ac1000);
+	searchArray[4] = new SearchImages(nature, hh0021);
+	searchArray[5] = new SearchImages(rock, ar0800);
+	searchArray[6] = new SearchImages(tree, aa0010);
+	searchArray[7] = new SearchImages(ranch, ai0059);
+	searchArray[8] = new SearchImages(morning, ak432);
+	
+	for (int i; i < searchArray.length; i++){
+		searchArray[i].possibleMatch();
+	}
+	
+}
