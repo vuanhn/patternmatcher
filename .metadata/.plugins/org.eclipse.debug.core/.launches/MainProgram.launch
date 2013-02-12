@@ -7,6 +7,6 @@
 <listEntry value="1"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="MainProgram"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-p /Users/cung/patternmatchtest/Patterns/black.jpg -s /Users/cung/patternmatchtest/Sources/hh0021.jpg"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-p /course/cs4500wc/Assignments/A4/Patterns/flower.gif -s /course/cs4500wc/Assignments/A4/Sources/ac1000.jpg"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="assign4"/>
 </launchConfiguration>

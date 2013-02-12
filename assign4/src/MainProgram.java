@@ -27,8 +27,8 @@ public class MainProgram {
 		File sourceFile = new File(sourceFilename);
 
 		SearchImages newSearch = SearchImages.search(patternFile, sourceFile);
-
-		newSearch.possibleMatch();
+				
+		newSearch.startSearch();
 
 		System.out.println("End");
 
@@ -68,7 +68,7 @@ public class MainProgram {
 		searchArray[8] = new SearchImages(morning, ak432);
 
 		for (int i = 0; i < searchArray.length; i++) {
-			searchArray[i].possibleMatch();
+			searchArray[i].startSearch();
 		}
 
 	}
