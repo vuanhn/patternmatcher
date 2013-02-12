@@ -12,7 +12,7 @@ abstract class SuperPixel {
 	public static PixelHash makePixelHash(int red, int green, int blue) {
 		return new PixelHash(red, green, blue);
 	}
-
+	
 	int getRed() {
 		return this.red;
 	}

@@ -3,39 +3,42 @@ import java.io.IOException;
 
 public class MainProgram {
 	public static void main(String[] args) throws IOException{
-		if (args.length != 4) {
-			System.exit(0);
-		} 
-
+//		if (args.length != 4) {
+//			System.exit(0);
+//		} 
+//
 //		int argOffset = 0;
-		String patternFilename = null;
-		String sourceFilename = null;
-
+//		String patternFilename = null;
+//		String sourceFilename = null;
+//		
 //		while (argOffset < args.length) {
-//			if (args[argOffset] == "-p") {
+//			if (args[argOffset].equals("-p")) {
 //				patternFilename = args[argOffset + 1];
-//			} else if (args[argOffset] == "-s") {
+//			} else if (args[argOffset].equals("-s")) {
 //				sourceFilename = args[argOffset + 1];
 //			}
 //			argOffset++;
 //		}
-
-		patternFilename = args[1];
-		sourceFilename = args[3];
-
-		File patternFile = new File(patternFilename);
-		File sourceFile = new File(sourceFilename);
-
-		SearchImages newSearch = SearchImages.search(patternFile, sourceFile);
-				
-		newSearch.startSearch();
+//
+//		File patternFile = new File(patternFilename);
+//		File sourceFile = new File(sourceFilename);
+//
+//		SearchImages newSearch = SearchImages.search(patternFile, sourceFile);
+//				
+//		newSearch.startSearch();
+		
+		try {
+			testImages();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		System.out.println("End");
 
 	}
 
 
-	public void testImages() throws Exception {
+	public static void testImages() throws Exception {
 		File black = new File("/course/cs4500wc/Assignments/A4/Patterns/black.jpg");
 		File bb0001 = new File("/course/cs4500wc/Assignments/A4/Sources/bb0001.jpg");
 		File hh0021 =  new File("/course/cs4500wc/Assignments/A4/Sources/hh0021.jpg");
