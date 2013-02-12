@@ -4,7 +4,8 @@ import java.io.IOException;
 public class MainProgram {
 	public static void main(String[] args) throws IOException{
 //		if (args.length != 4) {
-//			System.exit(0);
+//			System.out.println("Incorrect number of arguments");
+//			System.exit(1);
 //		} 
 //
 //		int argOffset = 0;
@@ -22,6 +23,11 @@ public class MainProgram {
 //
 //		File patternFile = new File(patternFilename);
 //		File sourceFile = new File(sourceFilename);
+//
+//		if (!(isValidFile(patternFile) && isValidFile(sourceFile))) {
+//			System.out.println("Invalid file types");
+//			System.exit(2);
+//		}
 //
 //		SearchImages newSearch = SearchImages.search(patternFile, sourceFile);
 //				
@@ -74,5 +80,11 @@ public class MainProgram {
 			searchArray[i].startSearch();
 		}
 
+	}
+	
+	private boolean isValidFile(File file){
+		String fileName = file.getName();
+		
+		return fileName.matches("*.jpg") || fileName.matches("*.png") || fileName.matches("*.gif");
 	}
 }
